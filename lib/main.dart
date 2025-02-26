@@ -20,6 +20,7 @@ class FadingTextAnimation extends StatefulWidget {
 
 class _FadingTextAnimationState extends State<FadingTextAnimation> {
   bool _isVisible = true;
+  final PageController _pageController = PageController();
 
   void toggleVisibility() {
     setState(() {
@@ -33,15 +34,30 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
       appBar: AppBar(
         title: Text('Fading Text Animation'),
       ),
-      body: Center(
-        child: AnimatedOpacity(
-          opacity: _isVisible ? 1.0 : 0.0,
-          duration: Duration(seconds: 1),
-          child: Text(
-            'Hello, Flutter!',
-            style: TextStyle(fontSize: 24),
+      body: PageView(
+        controller: _pageController,
+        children: [
+          Center(
+            child: AnimatedOpacity(
+              opacity: _isVisible ? 1.0 : 0.0,
+              duration: Duration(seconds: 1),
+              child: Text(
+                'Hello, Flutter!',
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
           ),
-        ),
+          Center(
+            child: AnimatedOpacity(
+              opacity: _isVisible ? 1.0 : 0.0,
+              duration: Duration(seconds: 3),
+              child: Text(
+                'Hello, World!',
+                style: TextStyle(fontSize: 24),
+              ),
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: toggleVisibility,
