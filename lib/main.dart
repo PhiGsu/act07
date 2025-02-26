@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 
 void main() {
   runApp(MyApp());
@@ -41,11 +42,18 @@ class FadingTextAnimation extends StatefulWidget {
 
 class _FadingTextAnimationState extends State<FadingTextAnimation> {
   bool _isVisible = true;
+  Color _textColor = Colors.black;
   final PageController _pageController = PageController();
 
   void toggleVisibility() {
     setState(() {
       _isVisible = !_isVisible;
+    });
+  }
+
+  void changeTextColor(Color color) {
+    setState(() {
+      _textColor = color;
     });
   }
 
@@ -58,6 +66,28 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
           IconButton(
             icon: Theme.of(context).brightness == Brightness.dark ? Icon(Icons.sunny) : Icon(Icons.nights_stay),
             onPressed: () => widget.changeTheme(Theme.of(context).brightness == Brightness.dark ? ThemeMode.light : ThemeMode.dark),
+          ),
+          IconButton(
+            icon: const Icon(Icons.color_lens),
+            onPressed: () async {
+              Color? pickedColor = await showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: Text('Pick a color'),
+                content: SingleChildScrollView(
+                child: BlockPicker(
+                  pickerColor: Colors.black,
+                  onColorChanged: (color) {
+                  Navigator.of(context).pop(color);
+                  },
+                ),
+                ),
+              ),
+              );
+              if (pickedColor != null) {
+                changeTextColor(pickedColor);
+              }
+            },
           )
         ],
       ),
@@ -70,7 +100,7 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
               duration: Duration(seconds: 1),
               child: Text(
                 'Hello, Flutter!',
-                style: TextStyle(fontSize: 24),
+                style: TextStyle(fontSize: 24, color: _textColor),
               ),
             ),
           ),
@@ -80,7 +110,7 @@ class _FadingTextAnimationState extends State<FadingTextAnimation> {
               duration: Duration(seconds: 3),
               child: Text(
                 'Hello, World!',
-                style: TextStyle(fontSize: 24),
+                style: TextStyle(fontSize: 24, color: _textColor),
               ),
             ),
           ),
